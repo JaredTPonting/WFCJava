@@ -3,6 +3,7 @@ package com.example;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 /* Made this to help read tilempa and extract a uniqe tile from it based on coordinates given. (0,0) will be top left */
 
@@ -16,12 +17,13 @@ public class TileMapParser {
     public TileMapParser(String tilemapResourcePath, int tileWidth, int tileHeight) throws IOException {
         // Load from classpath, works in IDE and JAR
         if (tilemapResourcePath == null){
-            throw new IllegalArgumentException("Tilemap resourrce path can not be null!!!");
+            throw new IllegalArgumentException("Tilemap resource path can not be null!!!");
         }
-        this.tilemapImage = ImageIO.read(getClass().getResourceAsStream(tilemapResourcePath));
-        if (tilemapImage == null) {
+        InputStream stream = getClass().getResourceAsStream(tilemapResourcePath);
+        if (stream == null) {
             throw new IOException("Resource not found: " + tilemapResourcePath);
         }
+        this.tilemapImage = ImageIO.read(stream);
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.tilesPerRow = tilemapImage.getWidth() / tileWidth;
