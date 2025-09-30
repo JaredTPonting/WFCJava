@@ -3,6 +3,8 @@ package com.example;
 import java.awt.Point;
 import java.util.Map;
 
+/** Represents an individual tile in a tile sheet **/
+
 public class Tile {
     private final String name;
     private final Point tilemapLocation; //column, row in the tilemap PNG
