@@ -15,6 +15,9 @@ public class TileMapParser {
 
     public TileMapParser(String tilemapResourcePath, int tileWidth, int tileHeight) throws IOException {
         // Load from classpath, works in IDE and JAR
+        if (tilemapResourcePath == null){
+            throw new IllegalArgumentException("Tilemap resourrce path can not be null!!!");
+        }
         this.tilemapImage = ImageIO.read(getClass().getResourceAsStream(tilemapResourcePath));
         if (tilemapImage == null) {
             throw new IOException("Resource not found: " + tilemapResourcePath);
