@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
+import java.awt.Point;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -78,5 +80,36 @@ class WaveFunctionCollapseTest {
         File file = new File(path);
         assertTrue(file.exists());
 //        file.delete(); // clean up, Comemnted out so I can see the image
+    }
+
+    @Test
+    void testSettingEdgeAndSave() throws Exception {
+        WaveFunctionCollapse wfc = new WaveFunctionCollapse(plane, tiles);
+        wfc.SetEdge(new Tile(
+                "GRASS",
+                new Point(1, 1),
+                Map.of(
+                        Direction.UP, "AAA",
+                        Direction.DOWN, "AAA",
+                        Direction.LEFT, "AAA",
+                        Direction.RIGHT, "AAA"
+                )
+        ));
+        wfc.collapse();
+
+        assertTrue(plane.isCollapsed(), "Plane should be fully collapsed");
+
+        // Render
+        BufferedImage image = plane.render(parser);
+        assertNotNull(image);
+        assertEquals(plane.getSize() * 16, image.getWidth());
+        assertEquals(plane.getSize() * 16, image.getHeight());
+
+        // Save
+        String path = "resources/test/test_output_set_edge_wfc.png";
+        plane.saveAsImage(parser, path);
+
+        File file = new File(path);
+        assertTrue(file.exists());
     }
 }

@@ -134,6 +134,22 @@ public class WaveFunctionCollapse {
         }
     }
 
+    public void SetEdge(Tile tile) {
+        int size = plane.getSize();
+
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                boolean isEdge = x == 0 || y == 0 || x == size - 1 || y == size - 1;
+                if (isEdge) {
+                    plane.setTile(x, y, tile);
+                    possibilities[y][x].clear();
+                    possibilities[y][x].add(tile);
+                    propagateConstraints(x, y);
+                }
+            }
+        }
+    }
+
     /** Check if two tiles are compatible in a given direction */
     private boolean edgesMatch(Tile t1, Tile t2, Direction dir) {
         switch (dir) {
