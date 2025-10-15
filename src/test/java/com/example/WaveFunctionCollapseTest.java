@@ -1,10 +1,12 @@
 package com.example;
 
+import com.example.utils.ImageUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.Point;
 import java.util.Map;
@@ -19,10 +21,17 @@ class WaveFunctionCollapseTest {
     TileMapParser parser;
     List<Tile> tiles;
 
+    Plane grassPlane;
+    Plane waterPlane;
+    TileMapParser grassParser;
+    TileMapParser waterParser;
+    List<Tile> grassTiles;
+    List<Tile> waterTiles;
+
 
     @BeforeEach
     void setUp() throws Exception {
-        plane = new Plane(10);
+        plane = new Plane(50);
         tiles = TileFactory.generateTiles();
         parser = new TileMapParser("/tiles/Grass.png", 16, 16);
     }
@@ -111,5 +120,50 @@ class WaveFunctionCollapseTest {
 
         File file = new File(path);
         assertTrue(file.exists());
+    }
+
+    @Test
+    void testCombiningImages() throws Exception {
+        grassPlane = new Plane(50);
+        grassTiles = TileFactory.generateTiles();
+        grassParser = new TileMapParser("/tiles/Grass.png", 16, 16);
+
+        WaveFunctionCollapse grassWFC = new WaveFunctionCollapse(grassPlane, grassTiles);
+        grassWFC.SetEdge(new Tile(
+                "GRASS",
+                new Point(1, 1),
+                Map.of(
+                        Direction.UP, "AAA",
+                        Direction.DOWN, "AAA",
+                        Direction.LEFT, "AAA",
+                        Direction.RIGHT, "AAA"
+                )
+        ));
+        grassWFC.collapse();
+        assertTrue(grassPlane.isCollapsed());
+
+        waterPlane = new Plane(50);
+        waterTiles = new ArrayList<>();
+        waterTiles.add(new Tile(
+                "WATER",
+                new Point(0, 0),
+                Map.of(
+                        Direction.UP, "*",
+                        Direction.DOWN, "*",
+                        Direction.LEFT, "*",
+                        Direction.RIGHT, "*"
+                )
+                ));
+        waterParser = new TileMapParser("/tiles/Water.png", 16, 16);
+
+        WaveFunctionCollapse waterWFC = new WaveFunctionCollapse(waterPlane, waterTiles);
+        waterWFC.collapse();
+        assertTrue(waterPlane.isCollapsed());
+
+        BufferedImage grassImage = grassPlane.render(grassParser);
+        BufferedImage waterImage = waterPlane.render(waterParser);
+
+        BufferedImage finalImage = ImageUtils.overlayImages(waterImage, grassImage);
+        ImageUtils.saveImage(finalImage, "resources/test/final_overlay.png");
     }
 }
