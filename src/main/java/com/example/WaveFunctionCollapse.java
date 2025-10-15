@@ -150,6 +150,17 @@ public class WaveFunctionCollapse {
         }
     }
 
+    public void fillMap(Tile tile) {
+        int size = plane.getSize();
+        for (int y = 0; y < size; y++){
+            for (int x = 0; x < size; x++) {
+                plane.setTile(x, y, tile);
+                possibilities[y][x].clear();
+                possibilities[y][x].add(tile);
+            }
+        }
+    }
+
     /** Check if two tiles are compatible in a given direction */
     private boolean edgesMatch(Tile t1, Tile t2, Direction dir) {
         switch (dir) {
