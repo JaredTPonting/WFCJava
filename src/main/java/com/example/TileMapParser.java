@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /* Made this to help read tilempa and extract a uniqe tile from it based on coordinates given. (0,0) will be top left */
+/* Basically after a Plane is collapsed, we then use the parser to turn the mapping into an actual square in the tile map */
 
 public class TileMapParser {
     private final BufferedImage tilemapImage;
